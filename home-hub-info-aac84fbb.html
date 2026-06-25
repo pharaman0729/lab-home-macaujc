@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>世界杯信息查询 · 延伸阅读</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: linear-gradient(145deg, #fbe9e7 0%, #fce4d6 50%, #f3e5ab 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2.5rem 1.2rem;
+            line-height: 1.7;
+            color: #2c2c2a;
+        }
+
+        .wrapper {
+            max-width: 880px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: #fffcf8;
+            border-radius: 40px 40px 32px 32px;
+            padding: 2.8rem 2.8rem 3.2rem;
+            box-shadow: 0 12px 28px rgba(160, 100, 60, 0.10), 0 6px 10px rgba(0, 0, 0, 0.04);
+            transition: box-shadow 0.3s ease;
+        }
+
+        @media (max-width: 600px) {
+            .card {
+                padding: 2rem 1.6rem 2.4rem;
+                border-radius: 32px;
+            }
+            body {
+                padding: 1.5rem 1rem;
+            }
+        }
+
+        /* 博客式文章标题 */
+        .article-title {
+            font-size: 2.2rem;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+            color: #4e342e;
+            line-height: 1.2;
+            margin-bottom: 0.3rem;
+            border-left: 6px solid #f9a825;
+            padding-left: 1rem;
+        }
+
+        @media (max-width: 600px) {
+            .article-title {
+                font-size: 1.7rem;
+                padding-left: 0.75rem;
+                border-left-width: 5px;
+            }
+        }
+
+        .subhead {
+            font-size: 1.1rem;
+            color: #6d4c41;
+            background: #f5ebe0;
+            display: inline-block;
+            padding: 0.3rem 1.2rem;
+            border-radius: 40px;
+            margin: 0.2rem 0 1.2rem 0;
+            font-weight: 450;
+        }
+
+        .byline {
+            font-size: 0.9rem;
+            color: #8d6e63;
+            margin-top: -0.2rem;
+            margin-bottom: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            flex-wrap: wrap;
+        }
+        .byline span {
+            background: #efe6dc;
+            padding: 0.1rem 0.8rem;
+            border-radius: 30px;
+        }
+
+        /* 正文段落 */
+        .content p {
+            margin-bottom: 1.5rem;
+            font-size: 1.02rem;
+            color: #3e3a36;
+        }
+
+        .content p:last-of-type {
+            margin-bottom: 2rem;
+        }
+
+        .content a {
+            color: #a15813;
+            text-decoration: none;
+            font-weight: 500;
+            border-bottom: 2px solid #f7c68b;
+            transition: border-color 0.2s, background 0.15s;
+            padding: 0 0.1rem;
+        }
+
+        .content a:hover {
+            border-bottom-color: #b5651e;
+            background: #fef0db;
+            border-radius: 2px;
+        }
+
+        /* 引用提示区块 */
+        .quote-block {
+            background: #f8efe6;
+            border-radius: 28px;
+            padding: 1.4rem 1.8rem;
+            margin: 2rem 0 1.6rem;
+            border-left: 5px solid #d38d5a;
+            font-style: normal;
+            box-shadow: inset 0 1px 4px rgba(0,0,0,0.02);
+        }
+
+        .quote-block .quote-label {
+            font-weight: 600;
+            color: #7b4a2c;
+            font-size: 0.9rem;
+            letter-spacing: 0.4px;
+            text-transform: uppercase;
+            display: block;
+            margin-bottom: 0.35rem;
+        }
+
+        .quote-block p {
+            margin-bottom: 0.4rem;
+            color: #4c3a31;
+        }
+
+        .quote-block p:last-child {
+            margin-bottom: 0;
+        }
+
+        .quote-block em {
+            color: #7b5a44;
+            font-style: italic;
+        }
+
+        /* 特色区块（类似特点/场景摘要） */
+        .feature-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.2rem;
+            margin: 2.2rem 0 1.8rem;
+        }
+
+        .feature-item {
+            flex: 1 1 160px;
+            background: #fcf6ef;
+            border-radius: 30px;
+            padding: 1rem 1.3rem 1.2rem;
+            border: 1px solid #ecdccc;
+            transition: background 0.2s;
+        }
+
+        .feature-item:hover {
+            background: #f6e8da;
+        }
+
+        .feature-item .fi-icon {
+            font-size: 1.6rem;
+            display: block;
+            margin-bottom: 0.2rem;
+        }
+
+        .feature-item .fi-title {
+            font-weight: 600;
+            color: #4e342e;
+            font-size: 1.04rem;
+        }
+
+        .feature-item .fi-desc {
+            font-size: 0.93rem;
+            color: #5f4d42;
+            margin-top: 0.2rem;
+        }
+
+        /* 访问句（行动感但不诱导） */
+        .visit-sentence {
+            margin: 2.2rem 0 0.4rem;
+            padding: 1.3rem 1.6rem;
+            background: #f6ede6;
+            border-radius: 60px;
+            display: inline-block;
+            font-size: 1.08rem;
+            box-shadow: 0 2px 6px rgba(120, 70, 30, 0.04);
+        }
+
+        .visit-sentence a {
+            font-weight: 600;
+            color: #a15813;
+            border-bottom: 2px solid #eabd8f;
+            text-decoration: none;
+            transition: border-color 0.2s;
+        }
+
+        .visit-sentence a:hover {
+            border-bottom-color: #b5651e;
+        }
+
+        /* FAQ 摘要小卡片 */
+        .faq-mini {
+            margin-top: 2.4rem;
+            border-top: 2px dashed #e6d4c4;
+            padding-top: 1.6rem;
+        }
+
+        .faq-mini summary {
+            font-weight: 500;
+            color: #4f3d34;
+            cursor: pointer;
+            padding: 0.4rem 0;
+            font-size: 1.03rem;
+            border-radius: 30px;
+            transition: background 0.2s;
+        }
+
+        .faq-mini summary:hover {
+            background: #f3e7dd;
+            padding-left: 0.6rem;
+        }
+
+        .faq-mini details {
+            margin-bottom: 0.8rem;
+        }
+
+        .faq-mini details p {
+            margin: 0.5rem 0 0.2rem 1.2rem;
+            color: #4f413a;
+            font-size: 0.96rem;
+            padding: 0.25rem 0;
+        }
+
+        .footer-note {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.88rem;
+            color: #7f6a5c;
+        }
+
+        .footer-note a {
+            color: #7b5a44;
+            text-decoration: underline wavy #cca98b 1.5px;
+            text-underline-offset: 4px;
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <div class="card">
+        <!-- 文章标题 -->
+        <h1 class="article-title">世界杯查询手记：对照、线索与延伸阅读</h1>
+        <div class="subhead">日常检索 · 档案整理</div>
+        <div class="byline">
+            <span>📋 资料整理</span> 
+            <span>⚽ 2026 周期</span>
+        </div>
+
+        <div class="content">
+            <p>
+                每当赛事周期临近，最频繁的动作往往不是观看直播，而是打开一个页面、输入一个年份、对照一组数据。从小组赛对阵到主办城市，从射手榜到历史纪录——这些信息分散在各大平台，而一个整合了基础档案的站点，能节省不少来回跳转的时间。
+            </p>
+
+            <p>
+                如果你正在查找与 <a href="https://home-hub-fifa2026.com">世界杯</a> 相关的赛程框架、场馆概况或历届冠军列表，可以直接将该站点作为起点。它提供了一种结构化的方式：把关键条目集中放置，方便快速对照，而不必在多个标签页之间反复切换。对于需要核实日期、场地或资格赛规则的场景，尤其顺手。
+            </p>
+
+            <p>
+                另外，很多延伸问题往往从一条简单的记录开始：比如某届比赛的决赛比分、某个球场的容量、或者某支国家队的晋级路线。这时，一个能同时容纳“查询”和“浏览”的页面，就比搜索引擎的一长串结果更友好。你可以在同一个界面上完成从“看到”到“确认”的过程。
+            </p>
+
+            <!-- 引用提示 -->
+            <div class="quote-block">
+                <span class="quote-label">📌 引用提示</span>
+                <p>
+                    “最好的查询工具，不是最花哨的那个，而是能让你在三次点击之内找到答案的那个。” —— 信息整理笔记
+                </p>
+                <p>
+                    基于这种思路，很多用户将 <a href="https://home-hub-fifa2026.com">世界杯</a> 专门页面收藏为常用参考，尤其是需要快速确认数字、日期或官方名称时。日常使用中，你也可以自己补充一些备注：比如把关注的球队赛程单独记录下来。
+                </p>
+            </div>
+
+            <!-- 特点场景卡片（差异化特点） -->
+            <div class="feature-grid">
+                <div class="feature-item">
+                    <span class="fi-icon">📅</span>
+                    <div class="fi-title">赛历对照</div>
+                    <div class="fi-desc">直接比对小组赛与淘汰赛日期，无需额外制表。</div>
+                </div>
+                <div class="feature-item">
+                    <span class="fi-icon">🏟️</span>
+                    <div class="fi-title">场馆速览</div>
+                    <div class="fi-desc">容量、城市、球场特征一目了然。</div>
+                </div>
+                <div class="feature-item">
+                    <span class="fi-icon">📖</span>
+                    <div class="fi-title">延伸阅读</div>
+                    <div class="fi-desc">从一条记录展开历史系列数据。</div>
+                </div>
+            </div>
+
+            <p>
+                此外，页面本身保持克制的信息密度，不会一次性推给你太多干扰条目。每次打开都能快速定位到需要的部分，很适合作为“第二大脑”里的一个固定锚点。如果你习惯在做功课之前先把资料架搭好，不妨把这一页当作起点。
+            </p>
+        </div>
+
+        <!-- 访问句（自然嵌在句子中） -->
+        <div class="visit-sentence">
+            🔍 如需查阅完整档案，可直接使用 <a href="https://home-hub-fifa2026.com">世界杯</a> 页面作为你的数据底座，配合个人笔记一起使用更高效。
+        </div>
+
+        <!-- FAQ 摘要（只写两条，不堆砌） -->
+        <div class="faq-mini">
+            <details>
+                <summary>❓ 这个站点包含历届冠军列表吗？</summary>
+                <p>是的，<a href="https://home-hub-fifa2026.com">世界杯</a> 页面中整理了从早期到最近一届的冠军及决赛信息，适合快速查阅或制作对照表。建议结合官方档案交叉核实。</p>
+            </details>
+            <details>
+                <summary>❓ 日常查询时，最推荐的用法是什么？</summary>
+                <p>把它当作查询首页：先在这里确认大致框架，再针对具体细节进行延伸阅读。比如先看场馆列表，再逐个搜索球场评价。</p>
+            </details>
+        </div>
+
+        <div class="footer-note">
+            <span>📎 保持资料整洁 · 一条记录开始</span><br>
+            <span style="opacity:0.6;">内容整理 · 仅作参考</span>
+        </div>
+    </div>
+</div>
+</body>
+</html>
